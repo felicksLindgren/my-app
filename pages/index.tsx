@@ -2,12 +2,20 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '../styles/Home.module.css'
+import { useEffect, useState } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home({ data }: any) {
   const serverData = JSON.parse(data);
-  
+
+  const [time, setTime] = useState<Date | null>(null);
+  useEffect(() => {
+    fetch('/api/time')
+      .then(res => res.json())
+      .then(json => setTime(new Date(json.time)));
+  }, []);
+
   return (
     <>
       <Head>
@@ -20,6 +28,7 @@ export default function Home({ data }: any) {
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js! The time is {serverData.time}</a>
         </h1>
+        <h2>The time from the API is {time?.toString()}</h2>
         <div className={styles.description}>
           <p>
             Get started by editing&nbsp;
